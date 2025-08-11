@@ -20,7 +20,6 @@ const ProfileForm = ({ user, onUpdate }: Props) => {
   const form = useForm<z.infer<typeof EditUserProfileSchema>>({
     mode: 'onChange',
     resolver: zodResolver(EditUserProfileSchema),
-    // не торкаємось user тут!
     defaultValues: { name: '', email: '' },
   })
 

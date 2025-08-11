@@ -3,6 +3,9 @@ import { DM_Sans } from 'next/font/google'
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { ClerkProvider } from '@clerk/nextjs'
+import ModalProvider from "@/providers/modal-provider";
+import { BillingProvider } from "@/providers/billing-provider";
+import { Toaster } from "sonner";
 
 const font = DM_Sans({ subsets: ['latin'] })
 
@@ -27,9 +30,13 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <BillingProvider>
+              <ModalProvider>
+                {children}
+                <Toaster />
+              </ModalProvider>
+            </BillingProvider>
           </ThemeProvider>
-
         </body>
       </html>
     </ClerkProvider >
