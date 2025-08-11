@@ -11,7 +11,7 @@ const Page = (props: Props) => {
         Workflows
         <WorkflowButton />
       </h1>
-      {/* <Workflows /> */}
+      <Workflows />
     </div>
   )
 }
