@@ -15,7 +15,6 @@ const FlowInstance = ({ children, edges, nodes }: Props) => {
   const pathname = usePathname()
   const editorId = useMemo(() => pathname.split('/').pop()!, [pathname])
 
-  // обчислюємо "flows" без setState
   const isFlow = useMemo(() => {
     const targets = edges.map((e) => e.target)
     const list: string[] = []

@@ -15,7 +15,6 @@ import { onContentChange } from '@/lib/editor-utils'
 import GoogleFileDetails from './google-file-details'
 import GoogleDriveFiles from './google-drive-files'
 import ActionButton from './action-button'
-// import { getFileMetaData } from '@/app/(main)/(pages)/connections/_actions/google-connection'
 import axios from 'axios'
 import { toast } from 'sonner'
 
@@ -23,9 +22,7 @@ export interface Option {
   value: string
   label: string
   disable?: boolean
-  /** fixed option that can't be removed. */
   fixed?: boolean
-  /** Group the options by providing key. */
   [key: string]: string | boolean | undefined
 }
 interface GroupOption {
@@ -55,7 +52,6 @@ const ContentBasedOnTitle = ({
   useEffect(() => {
     let active = true
 
-    // фетчимо ТІЛЬКИ для Google Drive і коли підключення не лоадиться
     const shouldFetch =
       title === 'Google Drive' && !nodeConnection.isLoading
 
@@ -66,8 +62,6 @@ const ContentBasedOnTitle = ({
         const res = await axios.get('/api/drive', { params: { limit: 1 } })
         if (!active) return
 
-        // Єдиний очікуваний формат: { files: [...] }
-        // але підстрахуємо старий: { message: { files: [...] } }
         const files =
           res?.data?.files ??
           res?.data?.message?.files ??
@@ -81,12 +75,9 @@ const ContentBasedOnTitle = ({
           toast.message('No files found')
         }
       } catch (err: any) {
-        // НЕ кидаємо помилку вгору — показуємо тост і не ламаємо рендер
         const status = err?.response?.status
         const serverMsg = err?.response?.data?.error
         console.error('GET /api/drive failed:', status, serverMsg ?? err?.message)
-
-        // типові причини: 401 (нема токена) або 403 (нема доступу)
         if (status === 401) {
           toast.error('Google Drive is not connected.')
         } else {
@@ -102,7 +93,6 @@ const ContentBasedOnTitle = ({
       active = false
     }
   }, [title, nodeConnection.isLoading, setFile])
-
 
   // @ts-ignore
   const nodeConnectionType: any = nodeConnection[nodeMapper[title]]

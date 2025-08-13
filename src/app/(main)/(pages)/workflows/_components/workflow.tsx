@@ -1,4 +1,6 @@
-import React from 'react'
+'use client'
+
+import React, { useState, useTransition } from 'react'
 import {
   Card,
   CardDescription,
@@ -20,12 +22,22 @@ type Props = {
 }
 
 const Workflow = ({ description, id, name, publish }: Props) => {
-  const onPublishFlow = async (event: any) => {
-    const response = await onFlowPublish(
-      id,
-      event.target.ariaChecked === 'false'
-    )
-    if (response) toast.message(response)
+  const [isPending, startTransition] = useTransition()
+  const [isPublished, setIsPublished] = useState(!!publish) // локальний стан
+
+  const handleToggle = (checked: boolean) => {
+    setIsPublished(checked) // оновлюємо одразу для UI
+
+    startTransition(async () => {
+      try {
+        const msg = await onFlowPublish(id, checked)
+        if (msg) toast.success(msg)
+      } catch (e) {
+        console.error(e)
+        toast.error('Failed to update publish state')
+        setIsPublished(!checked) // повертаємо назад якщо помилка
+      }
+    })
   }
 
   return (
@@ -42,36 +54,35 @@ const Workflow = ({ description, id, name, publish }: Props) => {
             />
             <Image
               src="/notion.png"
-              alt="Google Drive"
+              alt="Notion"
               height={30}
               width={30}
               className="object-contain"
             />
             <Image
               src="/discord.png"
-              alt="Google Drive"
+              alt="Discord"
               height={30}
               width={30}
               className="object-contain"
             />
           </div>
-          <div className="">
+          <div>
             <CardTitle className="text-lg">{name}</CardTitle>
             <CardDescription>{description}</CardDescription>
           </div>
         </Link>
       </CardHeader>
+
       <div className="flex flex-col items-center gap-2 p-4">
-        <Label
-          htmlFor="airplane-mode"
-          className="text-muted-foreground"
-        >
-          {publish! ? 'On' : 'Off'}
+        <Label htmlFor={`publish-${id}`} className="text-muted-foreground">
+          {isPublished ? 'On' : 'Off'}
         </Label>
         <Switch
-          id="airplane-mode"
-          // onClick={onPublishFlow}
-          defaultChecked={publish!}
+          id={`publish-${id}`}
+          checked={isPublished}
+          disabled={isPending}
+          onCheckedChange={handleToggle}
         />
       </div>
     </Card>

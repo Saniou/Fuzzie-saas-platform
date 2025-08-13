@@ -27,11 +27,6 @@ const EditorCanvasCardSingle = ({ data }: { data: EditorCanvasCardType }) => {
 
   const logo = useMemo(() => <EditorCanvasIconHelper type={data.type} />, [data])
 
-  /** Стабільний статус індикатора:
-   *  1) якщо є data.metadata.status ∈ {'ok','warn','error'} — беремо його
-   *  2) якщо є data.completed === true/false → ok/error
-   *  3) інакше робимо детермінований статус з nodeId (хеш)
-   */
   const status: 'ok' | 'warn' | 'error' = useMemo(() => {
     const metaStatus = (data?.metadata as any)?.status as
       | 'ok'
@@ -95,7 +90,6 @@ const EditorCanvasCardSingle = ({ data }: { data: EditorCanvasCardType }) => {
           {data.type}
         </Badge>
 
-        {/* anti-flicker LED */}
         <div
           className={clsx(
             'absolute left-3 top-4 h-2 w-2 rounded-full',
@@ -111,7 +105,6 @@ const EditorCanvasCardSingle = ({ data }: { data: EditorCanvasCardType }) => {
   )
 }
 
-/** Мемо — аби не перемальовуватись без змін важливих полів */
 function areEqual(
   prev: { data: EditorCanvasCardType },
   next: { data: EditorCanvasCardType }
