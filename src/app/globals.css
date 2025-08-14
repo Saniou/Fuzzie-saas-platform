@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ─────────── Глобальне ─────────── */
 *,
 *::before,
 *::after {
@@ -21,7 +20,6 @@
   );
 }
 
-/* ─────────── Токени теми ─────────── */
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -69,7 +67,6 @@
   }
 }
 
-/* ─────────── Базові застосування ─────────── */
 @layer base {
   * {
     @apply border-border;
@@ -79,8 +76,6 @@
   }
 }
 
-/* ─────────── Сумісність анімацій (v3 + v4) ─────────── */
-/* 1) Ключові кадри (видимі для обох версій) */
 @keyframes moveHorizontal {
   0%   { transform: translateX(-50%) translateY(-10%); }
   50%  { transform: translateX(50%) translateY(10%); }
@@ -97,8 +92,7 @@
   100% { transform: translateY(-50%); }
 }
 
-/* 2) Утиліти для Tailwind v3 (з фолбеками).
-      У Tailwind v4 ці ж класи прочитають змінні з @theme inline нижче. */
+
 @layer utilities {
   .animate-first   { animation: var(--animate-first,  moveVertical 30s ease infinite); }
   .animate-second  { animation: var(--animate-second, moveInCircle 20s reverse infinite); }
@@ -107,7 +101,6 @@
   .animate-fifth   { animation: var(--animate-fifth,  moveInCircle 20s ease infinite); }
 }
 
-/* 3) Tailwind v4: змінні @theme inline (v3 ігнорує, але має фолбеки вище) */
 @theme inline {
   --animate-first:  moveVertical 30s ease infinite;
   --animate-second: moveInCircle 20s reverse infinite;
@@ -132,7 +125,6 @@
   }
 }
 
-/* ==== Утиліти для градієнтних шарів (без arbitrary-класів) ==== */
 @layer utilities {
   .fx-container { height: 100%; width: 100%; }
 
