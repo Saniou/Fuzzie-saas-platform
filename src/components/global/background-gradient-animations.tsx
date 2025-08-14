@@ -1,5 +1,4 @@
 "use client";
-import { cn } from "@/lib/utils";
 
 export default function BackgroundGradientAnimation({
   gradientBackgroundStart = "rgb(0, 0, 0)",
@@ -32,10 +31,7 @@ export default function BackgroundGradientAnimation({
 }) {
   return (
     <div
-      className={cn(
-        "fixed inset-0 -z-50 overflow-hidden",
-        containerClassName
-      )}
+      className="fixed inset-0 -z-50 overflow-hidden"
       style={{
         backgroundImage: `linear-gradient(40deg, var(--gradient-background-start), var(--gradient-background-end))`,
         ["--gradient-background-start" as any]: gradientBackgroundStart,
@@ -65,7 +61,7 @@ export default function BackgroundGradientAnimation({
         </defs>
       </svg>
 
-      <div className={cn("", className)}>{children}</div>
+      <div>{children}</div>
 
       <div className="fx-container" style={{ filter: "url(#bg-blur) blur(40px)" }}>
         <div className="fx-layer fx-first  animate-first  opacity-100" />
