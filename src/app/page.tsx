@@ -14,8 +14,8 @@ export default function Home() {
     <main className="flex items-center justify-center flex-col">
       <BackgroundGradientAnimation />
       <Navbar />
-      <section className="h-screen w-full  bg-transparent rounded-md  !overflow-visible relative flex flex-col items-center  antialiased">
-        <div className="absolute inset-0  h-full w-full items-center px-5 py-24"></div>
+      <section className="h-screen w-full bg-transparent rounded-md  !overflow-visible relative flex flex-col items-center antialiased">
+        <div className="absolute inset-0 h-full w-full items-center px-5 py-24 "></div>
         <div className="flex flex-col mt-[-100px] md:mt-[-50px]">
           <ContainerScroll
             titleComponent={<div className="flex items-center flex-col">
@@ -27,12 +27,10 @@ export default function Home() {
                   Start For Free Today
                 </span>
               </Button>
-              <h1 className="pb-10 text-5xl md:text-8xl  bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-600 font-sans font-bold ">
+              <h1 className="pb-10 text-5xl md:text-8xl  bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-600 font-sans font-bold">
                 Automate Your Work With Fuzzie
               </h1>
-            </div>
-            }
-            children={undefined} />
+            </div>} children={undefined}          />
         </div>
       </section>
       <InfiniteMovingCards
@@ -41,14 +39,14 @@ export default function Home() {
         direction="right"
         speed="slow"
       />
-      <section className="mt-[150px]">
+      <section>
         <HeroParallax products={products}></HeroParallax>
       </section>
-      <section className="mt-[-850px]">
+      <section className="mt-[-500px]">
         <LampComponent />
         <div className="flex flex-wrap items-center justify-center flex-col md:flex-row gap-8 -mt-72">
           <CardContainer className="inter-var ">
-            <CardBody className="bg-transparent relative group/card  dark:hover:shadow-2xl dark:hover:shadow-neutral-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-full md:!w-[350px] h-auto rounded-xl p-6 border">
+            <CardBody className="bg-gray-50 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-neutral-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-full md:!w-[350px] h-auto rounded-xl p-6 border">
               <CardItem
                 translateZ="50"
                 className="text-xl font-bold text-neutral-600 dark:text-white "
