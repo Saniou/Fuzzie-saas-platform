@@ -1,6 +1,5 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { useEffect, useRef, useState } from "react";
 
 export default function BackgroundGradientAnimation({
   gradientBackgroundStart = "rgb(0, 0, 0)",
@@ -15,7 +14,6 @@ export default function BackgroundGradientAnimation({
   blendingValue = "hard-light",
   children,
   className,
-  interactive = true,
   containerClassName,
 }: {
   gradientBackgroundStart?: string;
@@ -30,47 +28,14 @@ export default function BackgroundGradientAnimation({
   blendingValue?: string;
   children?: React.ReactNode;
   className?: string;
-  interactive?: boolean;
   containerClassName?: string;
 }) {
-  const interactiveRef = useRef<HTMLDivElement>(null);
-
-  const [curX, setCurX] = useState(0);
-  const [curY, setCurY] = useState(0);
-  const [tgX, setTgX] = useState(0);
-  const [tgY, setTgY] = useState(0);
-
-  // RAF-анімація — як у тебе
-  useEffect(() => {
-    let frame: number;
-    const animate = () => {
-      if (interactiveRef.current) {
-        setCurX((prev) => prev + (tgX - prev) / 20);
-        setCurY((prev) => prev + (tgY - prev) / 20);
-        interactiveRef.current.style.transform = `translate(${Math.round(curX)}px, ${Math.round(curY)}px)`;
-      }
-      frame = requestAnimationFrame(animate);
-    };
-    frame = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(frame);
-  }, [tgX, tgY, curX, curY]);
-
-  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (interactiveRef.current) {
-      const rect = interactiveRef.current.getBoundingClientRect();
-      setTgX(event.clientX - rect.left);
-      setTgY(event.clientY - rect.top);
-    }
-  };
-
   return (
     <div
       className={cn(
-        // справжній бекграунд, завжди за всім
-        "fixed inset-0 -z-50 pointer-events-none overflow-hidden",
+        "fixed inset-0 -z-50 overflow-hidden",
         containerClassName
       )}
-      // передаємо всі змінні ЛОКАЛЬНО, без document.body
       style={{
         backgroundImage: `linear-gradient(40deg, var(--gradient-background-start), var(--gradient-background-end))`,
         ["--gradient-background-start" as any]: gradientBackgroundStart,
@@ -85,7 +50,6 @@ export default function BackgroundGradientAnimation({
         ["--blending-value" as any]: blendingValue,
       }}
     >
-      {/* Глобальний фільтр з фіксованим id */}
       <svg width="0" height="0" style={{ position: "absolute" }}>
         <defs>
           <filter id="bg-blur">
@@ -101,28 +65,14 @@ export default function BackgroundGradientAnimation({
         </defs>
       </svg>
 
-      {/* опційні діти */}
       <div className={cn("", className)}>{children}</div>
 
-      {/* контейнери шарів, тепер без arbitrary-класів */}
-      <div
-        className="fx-container"
-        style={{ filter: "url(#bg-blur) blur(40px)" }}
-        onMouseMove={interactive ? handleMouseMove : undefined}
-      >
+      <div className="fx-container" style={{ filter: "url(#bg-blur) blur(40px)" }}>
         <div className="fx-layer fx-first  animate-first  opacity-100" />
         <div className="fx-layer fx-second animate-second opacity-100" />
         <div className="fx-layer fx-third  animate-third  opacity-100" />
         <div className="fx-layer fx-fourth animate-fourth opacity-70" />
         <div className="fx-layer fx-fifth  animate-fifth  opacity-100" />
-
-        {interactive && (
-          <div
-            ref={interactiveRef}
-            className="absolute w-full h-full -top-1/2 -left-1/2 fx-pointer opacity-70"
-            style={{ mixBlendMode: "var(--blending-value)" }}
-          />
-        )}
       </div>
     </div>
   );

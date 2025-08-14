@@ -12,7 +12,7 @@ import { CheckIcon } from 'lucide-react'
 export default function Home() {
   return (
     <main className="flex items-center justify-center flex-col">
-      <BackgroundGradientAnimation
+      <BackgroundGradientAnimation interactive={false}
       />
       <Navbar />
       <section className="h-screen w-full  bg-transparent rounded-md  !overflow-visible relative flex flex-col items-center  antialiased">
