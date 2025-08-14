@@ -40,7 +40,7 @@ export default function BackgroundGradientAnimation({
   const [tgX, setTgX] = useState(0);
   const [tgY, setTgY] = useState(0);
 
-  // RAF-анімація — залишено як у тебе
+  // RAF-анімація — як у тебе
   useEffect(() => {
     let frame: number;
     const animate = () => {
@@ -66,13 +66,13 @@ export default function BackgroundGradientAnimation({
   return (
     <div
       className={cn(
-        // фон тепер завжди позаду і на весь екран
+        // справжній бекграунд, завжди за всім
         "fixed inset-0 -z-50 pointer-events-none overflow-hidden",
         containerClassName
       )}
-      // усі CSS-змінні — локально в контейнері; фон — через backgroundImage
+      // передаємо всі змінні ЛОКАЛЬНО, без document.body
       style={{
-        backgroundImage: `linear-gradient(40deg,var(--gradient-background-start),var(--gradient-background-end))`,
+        backgroundImage: `linear-gradient(40deg, var(--gradient-background-start), var(--gradient-background-end))`,
         ["--gradient-background-start" as any]: gradientBackgroundStart,
         ["--gradient-background-end" as any]: gradientBackgroundEnd,
         ["--first-color" as any]: firstColor,
@@ -85,7 +85,7 @@ export default function BackgroundGradientAnimation({
         ["--blending-value" as any]: blendingValue,
       }}
     >
-      {/* SVG-фільтр з фіксованим id */}
+      {/* Глобальний фільтр з фіксованим id */}
       <svg width="0" height="0" style={{ position: "absolute" }}>
         <defs>
           <filter id="bg-blur">
@@ -101,63 +101,26 @@ export default function BackgroundGradientAnimation({
         </defs>
       </svg>
 
-      {/* (опціонально) діти, як і було */}
+      {/* опційні діти */}
       <div className={cn("", className)}>{children}</div>
 
-      {/* контейнери з шарами; фільтр задаємо інлайн, без Tailwind arbitrary */}
+      {/* контейнери шарів, тепер без arbitrary-класів */}
       <div
-        className="gradients-container h-full w-full"
+        className="fx-container"
         style={{ filter: "url(#bg-blur) blur(40px)" }}
+        onMouseMove={interactive ? handleMouseMove : undefined}
       >
-        <div
-          className={cn(
-            `absolute [background:radial-gradient(circle_at_center,_var(--first-color)_0,_var(--first-color)_50%)_no-repeat]`,
-            `[mix-blend-mode:var(--blending-value)] w-[var(--size)] h-[var(--size)]
-              top-[calc(50%-var(--size)/2)] left-[calc(50%-var(--size)/2)]
-              [transform-origin:center_center] animate-first opacity-100`
-          )}
-        />
-        <div
-          className={cn(
-            `absolute [background:radial-gradient(circle_at_center,_rgba(var(--second-color),_0.8)_0,_rgba(var(--second-color),_0)_50%)_no-repeat]`,
-            `[mix-blend-mode:var(--blending-value)] w-[var(--size)] h-[var(--size)]
-              top-[calc(50%-var(--size)/2)] left-[calc(50%-var(--size)/2)]
-              [transform-origin:calc(50%-400px)] animate-second opacity-100`
-          )}
-        />
-        <div
-          className={cn(
-            `absolute [background:radial-gradient(circle_at_center,_rgba(var(--third-color),_0.8)_0,_rgba(var(--third-color),_0)_50%)_no-repeat]`,
-            `[mix-blend-mode:var(--blending-value)] w-[var(--size)] h-[var(--size)]
-              top-[calc(50%-var(--size)/2)] left-[calc(50%-var(--size)/2)]
-              [transform-origin:calc(50%+400px)] animate-third opacity-100`
-          )}
-        />
-        <div
-          className={cn(
-            `absolute [background:radial-gradient(circle_at_center,_rgba(var(--fourth-color),_0.8)_0,_rgba(var(--fourth-color),_0)_50%)_no-repeat]`,
-            `[mix-blend-mode:var(--blending-value)] w-[var(--size)] h-[var(--size)]
-              top-[calc(50%-var(--size)/2)] left-[calc(50%-var(--size)/2)]
-              [transform-origin:calc(50%-200px)] animate-fourth opacity-70`
-          )}
-        />
-        <div
-          className={cn(
-            `absolute [background:radial-gradient(circle_at_center,_rgba(var(--fifth-color),_0.8)_0,_rgba(var(--fifth-color),_0)_50%)_no-repeat]`,
-            `[mix-blend-mode:var(--blending-value)] w-[var(--size)] h-[var(--size)]
-              top-[calc(50%-var(--size)/2)] left-[calc(50%-var(--size)/2)]
-              [transform-origin:calc(50%-800px)_calc(50%+800px)] animate-fifth opacity-100`
-          )}
-        />
+        <div className="fx-layer fx-first  animate-first  opacity-100" />
+        <div className="fx-layer fx-second animate-second opacity-100" />
+        <div className="fx-layer fx-third  animate-third  opacity-100" />
+        <div className="fx-layer fx-fourth animate-fourth opacity-70" />
+        <div className="fx-layer fx-fifth  animate-fifth  opacity-100" />
 
         {interactive && (
           <div
             ref={interactiveRef}
-            onMouseMove={handleMouseMove}
-            className={cn(
-              `absolute [background:radial-gradient(circle_at_center,_rgba(var(--pointer-color),_0.8)_0,_rgba(var(--pointer-color),_0)_50%)_no-repeat]`,
-              `[mix-blend-mode:var(--blending-value)] w-full h-full -top-1/2 -left-1/2 opacity-70`
-            )}
+            className="absolute w-full h-full -top-1/2 -left-1/2 fx-pointer opacity-70"
+            style={{ mixBlendMode: "var(--blending-value)" }}
           />
         )}
       </div>

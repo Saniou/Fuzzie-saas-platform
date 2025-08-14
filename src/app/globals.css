@@ -131,3 +131,25 @@
     100% { transform: translateY(-50%); }
   }
 }
+
+/* ==== Утиліти для градієнтних шарів (без arbitrary-класів) ==== */
+@layer utilities {
+  .fx-container { height: 100%; width: 100%; }
+
+  .fx-layer {
+    position: absolute;
+    width: var(--size);
+    height: var(--size);
+    top: calc(50% - var(--size) / 2);
+    left: calc(50% - var(--size) / 2);
+    mix-blend-mode: var(--blending-value);
+  }
+
+  .fx-first  { background: radial-gradient(circle at center, var(--first-color) 0, var(--first-color) 50%) no-repeat; transform-origin: center center; }
+  .fx-second { background: radial-gradient(circle at center, rgba(var(--second-color),0.8) 0, rgba(var(--second-color),0) 50%) no-repeat; transform-origin: calc(50% - 400px); }
+  .fx-third  { background: radial-gradient(circle at center, rgba(var(--third-color),0.8) 0, rgba(var(--third-color),0) 50%) no-repeat; transform-origin: calc(50% + 400px); }
+  .fx-fourth { background: radial-gradient(circle at center, rgba(var(--fourth-color),0.8) 0, rgba(var(--fourth-color),0) 50%) no-repeat; transform-origin: calc(50% - 200px); }
+  .fx-fifth  { background: radial-gradient(circle at center, rgba(var(--fifth-color),0.8) 0, rgba(var(--fifth-color),0) 50%) no-repeat; transform-origin: calc(50% - 800px) calc(50% + 800px); }
+
+  .fx-pointer { background: radial-gradient(circle at center, rgba(var(--pointer-color),0.8) 0, rgba(var(--pointer-color),0) 50%) no-repeat; }
+}
