@@ -145,7 +145,7 @@ export function DashboardContent() {
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="end">
-              <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
+              <Calendar mode="single" selected={date} onSelect={setDate} initialFocus cellSize={56} />
             </PopoverContent>
           </Popover>
 
@@ -209,7 +209,7 @@ export function DashboardContent() {
           return (
             <Card
               key={stat.title}
-              className="hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer animate-in slide-in-from-bottom-4 duration-700 border-0 bg-gradient-to-br from-card to-card/50 group"
+              className="hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer animate-in slide-in-from-bottom-4 duration-700 border-2 bg-gradient-to-br from-card to-card/50 group"
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

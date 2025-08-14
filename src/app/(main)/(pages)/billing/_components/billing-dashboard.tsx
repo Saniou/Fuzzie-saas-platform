@@ -90,9 +90,6 @@ const BillingDashboard = () => {
       {/* Header Section */}
       <div className="animate-slide-in-up">
         <div className="flex items-center justify-between mb-2">
-          <h1 className="font-montserrat font-black text-4xl bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
-            Your Billing Overview
-          </h1>
           <div className="flex items-center gap-3">
             <Badge variant="secondary" className="px-3 py-1 font-open-sans">
               <Crown className="w-4 h-4 mr-1" />

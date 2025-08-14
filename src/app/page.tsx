@@ -27,7 +27,7 @@ export default function Home() {
                   Start For Free Today
                 </span>
               </Button>
-              <h1 className="text-5xl md:text-8xl  bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-600 font-sans font-bold ">
+              <h1 className="pb-10 text-5xl md:text-8xl  bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-600 font-sans font-bold ">
                 Automate Your Work With Fuzzie
               </h1>
             </div>
@@ -41,10 +41,10 @@ export default function Home() {
         direction="right"
         speed="slow"
       />
-      <section>
+      <section className="mt-[150px]">
         <HeroParallax products={products}></HeroParallax>
       </section>
-      <section className="mt-[-150px]">
+      <section className="mt-[-850px]">
         <LampComponent />
         <div className="flex flex-wrap items-center justify-center flex-col md:flex-row gap-8 -mt-72">
           <CardContainer className="inter-var ">

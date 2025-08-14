@@ -28,32 +28,34 @@ export const HeroParallax = ({
     offset: ['start start', 'end start'],
   })
 
-  const springConfig = { stiffness: 300, damping: 30, bounce: 100 }
+  const springConfig = { stiffness: 80, damping: 20, mass: 0.6, bounce: 0 }
 
   const translateX = useSpring(
-    useTransform(scrollYProgress, [0, 1], [0, 1000]),
+    useTransform(scrollYProgress, [0, 1], [0, 400]),
     springConfig
   )
   const translateXReverse = useSpring(
-    useTransform(scrollYProgress, [0, 1], [0, -1000]),
+    useTransform(scrollYProgress, [0, 1], [0, -400]),
     springConfig
   )
+  
   const rotateX = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], [15, 0]),
+    useTransform(scrollYProgress, [0, 0.2], [10, 0]),
     springConfig
   )
   const opacity = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], [0.2, 1]),
+    useTransform(scrollYProgress, [0, 0.2], [0.4, 1]),
     springConfig
   )
   const rotateZ = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], [20, 0]),
+    useTransform(scrollYProgress, [0, 0.2], [10, 0]),
     springConfig
   )
   const translateY = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], [-700, 500]),
+    useTransform(scrollYProgress, [0, 0.2], [-200, 200]),
     springConfig
   )
+  
   return (
     <div
       ref={ref}
@@ -103,11 +105,11 @@ export const HeroParallax = ({
 
 export const Header = () => {
   return (
-    <div className="max-w-7xl relative mx-auto py-20 md:py-40 px-4 w-full  left-0 top-0">
+    <div className="absolute z-20 top-60 left-1/2 -translate-x-1/2 max-w-7xl mx-auto px-4 w-full text-left">
       <h1 className="text-2xl md:text-7xl font-bold dark:text-white">
         The Ultimate <br /> development studio
       </h1>
-      <p className="max-w-2xl text-base md:text-xl mt-8 dark:text-neutral-200">
+      <p className="max-w-2xl md:text-xl mt-8 dark:text-neutral-200">
         We build beautiful products with the latest technologies and frameworks.
         We are a team of passionate developers and designers that love to build
         amazing products.

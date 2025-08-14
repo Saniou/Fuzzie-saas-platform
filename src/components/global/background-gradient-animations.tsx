@@ -9,7 +9,7 @@ export default function BackgroundGradientAnimation({
   fourthColor = "200, 50, 50",   
   fifthColor = "180, 180, 50",   
   pointerColor = "140, 100, 255",
-  size = "60%",                  // менше, ніж 80%, але більше, ніж 48%
+  size = "90%",                  // менше, ніж 80%, але більше, ніж 48%
   blendingValue = "hard-light",
   children,
   className,
