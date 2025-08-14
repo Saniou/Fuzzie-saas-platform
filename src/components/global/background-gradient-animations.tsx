@@ -59,19 +59,19 @@ export default function BackgroundGradientAnimation({
   }, []);
 
   useEffect(() => {
-    function move() {
-      if (!interactiveRef.current) {
-        return;
+    let frame: number;
+    const animate = () => {
+      if (interactiveRef.current) {
+        setCurX((prev) => prev + (tgX - prev) / 20);
+        setCurY((prev) => prev + (tgY - prev) / 20);
+        interactiveRef.current.style.transform = `translate(${Math.round(curX)}px, ${Math.round(curY)}px)`;
       }
-      setCurX(curX + (tgX - curX) / 20);
-      setCurY(curY + (tgY - curY) / 20);
-      interactiveRef.current.style.transform = `translate(${Math.round(
-        curX
-      )}px, ${Math.round(curY)}px)`;
-    }
-
-    move();
+      frame = requestAnimationFrame(animate);
+    };
+    frame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frame);
   }, [tgX, tgY]);
+
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
     if (interactiveRef.current) {
@@ -115,8 +115,9 @@ export default function BackgroundGradientAnimation({
       <div
         className={cn(
           "gradients-container h-full w-full blur-lg",
-          isSafari ? "blur-2xl" : "[filter:url(#blurMe)_blur(40px)]"
+          isSafari ? "blur-2xl" : undefined
         )}
+        style={!isSafari ? { filter: "url(#blurMe) blur(40px)" } : undefined}
       >
         <div
           className={cn(

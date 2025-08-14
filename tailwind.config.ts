@@ -129,6 +129,9 @@ module.exports = {
     },
   },
   plugins: [require('tailwindcss-animate')],
+  safelist: [
+    '[filter:url(#blurMe)_blur(40px)]',
+  ],
 }
 
 // function addVariablesForColors({ addBase, theme }: any) {
