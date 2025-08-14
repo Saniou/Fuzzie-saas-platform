@@ -12,20 +12,18 @@ import { CheckIcon } from 'lucide-react'
 export default function Home() {
   return (
     <main className="flex items-center justify-center flex-col">
-      <div className="fixed inset-2 -z-10">
-        <BackgroundGradientAnimation
-          gradientBackgroundStart="rgb(0, 0, 0)"
-          gradientBackgroundEnd="rgb(0, 0, 0)"
-          firstColor="18,113,255"
-          secondColor="221,74,255"
-          thirdColor="100,220,255"
-          fourthColor="200,50,50"
-          fifthColor="180,180,50"
-          pointerColor="140,100,255"
-          size="80%"
-          blendingValue="hard-light"
-        />
-      </div>
+      <BackgroundGradientAnimation
+        gradientBackgroundStart="rgb(0, 0, 0)"
+        gradientBackgroundEnd="rgb(0, 0, 0)"
+        firstColor="18,113,255"
+        secondColor="221,74,255"
+        thirdColor="100,220,255"
+        fourthColor="200,50,50"
+        fifthColor="180,180,50"
+        pointerColor="140,100,255"
+        size="80%"
+        blendingValue="hard-light"
+      />
       <Navbar />
       <section className="h-screen w-full  bg-transparent rounded-md  !overflow-visible relative flex flex-col items-center  antialiased">
         <div className="absolute inset-0  h-full w-full items-center px-5 py-24"></div>
