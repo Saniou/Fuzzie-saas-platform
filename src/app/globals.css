@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─────────── Глобальне ─────────── */
 *,
 *::before,
 *::after {
@@ -11,6 +12,7 @@
 *::-webkit-scrollbar {
   display: none !important;
 }
+
 .bg-radial-gradient {
   background-image: radial-gradient(
     circle at 10% 20%,
@@ -19,6 +21,7 @@
   );
 }
 
+/* ─────────── Токени теми ─────────── */
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -66,6 +69,7 @@
   }
 }
 
+/* ─────────── Базові застосування ─────────── */
 @layer base {
   * {
     @apply border-border;
@@ -75,47 +79,55 @@
   }
 }
 
+/* ─────────── Сумісність анімацій (v3 + v4) ─────────── */
+/* 1) Ключові кадри (видимі для обох версій) */
+@keyframes moveHorizontal {
+  0%   { transform: translateX(-50%) translateY(-10%); }
+  50%  { transform: translateX(50%) translateY(10%); }
+  100% { transform: translateX(-50%) translateY(-10%); }
+}
+@keyframes moveInCircle {
+  0%   { transform: rotate(0deg); }
+  50%  { transform: rotate(180deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes moveVertical {
+  0%   { transform: translateY(-50%); }
+  50%  { transform: translateY(50%); }
+  100% { transform: translateY(-50%); }
+}
 
+/* 2) Утиліти для Tailwind v3 (з фолбеками).
+      У Tailwind v4 ці ж класи прочитають змінні з @theme inline нижче. */
+@layer utilities {
+  .animate-first   { animation: var(--animate-first,  moveVertical 30s ease infinite); }
+  .animate-second  { animation: var(--animate-second, moveInCircle 20s reverse infinite); }
+  .animate-third   { animation: var(--animate-third,  moveInCircle 40s linear infinite); }
+  .animate-fourth  { animation: var(--animate-fourth, moveHorizontal 40s ease infinite); }
+  .animate-fifth   { animation: var(--animate-fifth,  moveInCircle 20s ease infinite); }
+}
+
+/* 3) Tailwind v4: змінні @theme inline (v3 ігнорує, але має фолбеки вище) */
 @theme inline {
-  --animate-first: moveVertical 30s ease infinite;
+  --animate-first:  moveVertical 30s ease infinite;
   --animate-second: moveInCircle 20s reverse infinite;
-  --animate-third: moveInCircle 40s linear infinite;
+  --animate-third:  moveInCircle 40s linear infinite;
   --animate-fourth: moveHorizontal 40s ease infinite;
-  --animate-fifth: moveInCircle 20s ease infinite;
+  --animate-fifth:  moveInCircle 20s ease infinite;
 
   @keyframes moveHorizontal {
-    0% {
-      transform: translateX(-50%) translateY(-10%);
-    }
-    50% {
-      transform: translateX(50%) translateY(10%);
-    }
-    100% {
-      transform: translateX(-50%) translateY(-10%);
-    }
+    0%   { transform: translateX(-50%) translateY(-10%); }
+    50%  { transform: translateX(50%) translateY(10%); }
+    100% { transform: translateX(-50%) translateY(-10%); }
   }
-
   @keyframes moveInCircle {
-    0% {
-      transform: rotate(0deg);
-    }
-    50% {
-      transform: rotate(180deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
+    0%   { transform: rotate(0deg); }
+    50%  { transform: rotate(180deg); }
+    100% { transform: rotate(360deg); }
   }
-
   @keyframes moveVertical {
-    0% {
-      transform: translateY(-50%);
-    }
-    50% {
-      transform: translateY(50%);
-    }
-    100% {
-      transform: translateY(-50%);
-    }
+    0%   { transform: translateY(-50%); }
+    50%  { transform: translateY(50%); }
+    100% { transform: translateY(-50%); }
   }
 }
