@@ -39,25 +39,8 @@ export default function BackgroundGradientAnimation({
   const [curY, setCurY] = useState(0);
   const [tgX, setTgX] = useState(0);
   const [tgY, setTgY] = useState(0);
-  useEffect(() => {
-    document.body.style.setProperty(
-      "--gradient-background-start",
-      gradientBackgroundStart
-    );
-    document.body.style.setProperty(
-      "--gradient-background-end",
-      gradientBackgroundEnd
-    );
-    document.body.style.setProperty("--first-color", firstColor);
-    document.body.style.setProperty("--second-color", secondColor);
-    document.body.style.setProperty("--third-color", thirdColor);
-    document.body.style.setProperty("--fourth-color", fourthColor);
-    document.body.style.setProperty("--fifth-color", fifthColor);
-    document.body.style.setProperty("--pointer-color", pointerColor);
-    document.body.style.setProperty("--size", size);
-    document.body.style.setProperty("--blending-value", blendingValue);
-  }, []);
 
+  // RAF-анімація — залишено як у тебе
   useEffect(() => {
     let frame: number;
     const animate = () => {
@@ -70,8 +53,7 @@ export default function BackgroundGradientAnimation({
     };
     frame = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(frame);
-  }, [tgX, tgY]);
-
+  }, [tgX, tgY, curX, curY]);
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
     if (interactiveRef.current) {
@@ -81,26 +63,33 @@ export default function BackgroundGradientAnimation({
     }
   };
 
-  const [isSafari, setIsSafari] = useState(false);
-  useEffect(() => {
-    setIsSafari(/^((?!chrome|android).)*safari/i.test(navigator.userAgent));
-  }, []);
-
   return (
     <div
       className={cn(
-        "h-screen w-screen relative overflow-hidden top-0 left-0 bg-[linear-gradient(40deg,var(--gradient-background-start),var(--gradient-background-end))]",
+        // фон тепер завжди позаду і на весь екран
+        "fixed inset-0 -z-50 pointer-events-none overflow-hidden",
         containerClassName
       )}
+      // усі CSS-змінні — локально в контейнері; фон — через backgroundImage
+      style={{
+        backgroundImage: `linear-gradient(40deg,var(--gradient-background-start),var(--gradient-background-end))`,
+        ["--gradient-background-start" as any]: gradientBackgroundStart,
+        ["--gradient-background-end" as any]: gradientBackgroundEnd,
+        ["--first-color" as any]: firstColor,
+        ["--second-color" as any]: secondColor,
+        ["--third-color" as any]: thirdColor,
+        ["--fourth-color" as any]: fourthColor,
+        ["--fifth-color" as any]: fifthColor,
+        ["--pointer-color" as any]: pointerColor,
+        ["--size" as any]: size,
+        ["--blending-value" as any]: blendingValue,
+      }}
     >
-      <svg className="hidden">
+      {/* SVG-фільтр з фіксованим id */}
+      <svg width="0" height="0" style={{ position: "absolute" }}>
         <defs>
-          <filter id="blurMe">
-            <feGaussianBlur
-              in="SourceGraphic"
-              stdDeviation="10"
-              result="blur"
-            />
+          <filter id="bg-blur">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
             <feColorMatrix
               in="blur"
               mode="matrix"
@@ -111,59 +100,55 @@ export default function BackgroundGradientAnimation({
           </filter>
         </defs>
       </svg>
+
+      {/* (опціонально) діти, як і було */}
       <div className={cn("", className)}>{children}</div>
+
+      {/* контейнери з шарами; фільтр задаємо інлайн, без Tailwind arbitrary */}
       <div
-        className={cn(
-          "gradients-container h-full w-full blur-lg",
-          isSafari ? "blur-2xl" : undefined
-        )}
-        style={!isSafari ? { filter: "url(#blurMe) blur(40px)" } : undefined}
+        className="gradients-container h-full w-full"
+        style={{ filter: "url(#bg-blur) blur(40px)" }}
       >
         <div
           className={cn(
             `absolute [background:radial-gradient(circle_at_center,_var(--first-color)_0,_var(--first-color)_50%)_no-repeat]`,
-            `[mix-blend-mode:var(--blending-value)] w-[var(--size)] h-[var(--size)] top-[calc(50%-var(--size)/2)] left-[calc(50%-var(--size)/2)]`,
-            `[transform-origin:center_center]`,
-            `animate-first`,
-            `opacity-100`
+            `[mix-blend-mode:var(--blending-value)] w-[var(--size)] h-[var(--size)]
+              top-[calc(50%-var(--size)/2)] left-[calc(50%-var(--size)/2)]
+              [transform-origin:center_center] animate-first opacity-100`
           )}
-        ></div>
+        />
         <div
           className={cn(
             `absolute [background:radial-gradient(circle_at_center,_rgba(var(--second-color),_0.8)_0,_rgba(var(--second-color),_0)_50%)_no-repeat]`,
-            `[mix-blend-mode:var(--blending-value)] w-[var(--size)] h-[var(--size)] top-[calc(50%-var(--size)/2)] left-[calc(50%-var(--size)/2)]`,
-            `[transform-origin:calc(50%-400px)]`,
-            `animate-second`,
-            `opacity-100`
+            `[mix-blend-mode:var(--blending-value)] w-[var(--size)] h-[var(--size)]
+              top-[calc(50%-var(--size)/2)] left-[calc(50%-var(--size)/2)]
+              [transform-origin:calc(50%-400px)] animate-second opacity-100`
           )}
-        ></div>
+        />
         <div
           className={cn(
             `absolute [background:radial-gradient(circle_at_center,_rgba(var(--third-color),_0.8)_0,_rgba(var(--third-color),_0)_50%)_no-repeat]`,
-            `[mix-blend-mode:var(--blending-value)] w-[var(--size)] h-[var(--size)] top-[calc(50%-var(--size)/2)] left-[calc(50%-var(--size)/2)]`,
-            `[transform-origin:calc(50%+400px)]`,
-            `animate-third`,
-            `opacity-100`
+            `[mix-blend-mode:var(--blending-value)] w-[var(--size)] h-[var(--size)]
+              top-[calc(50%-var(--size)/2)] left-[calc(50%-var(--size)/2)]
+              [transform-origin:calc(50%+400px)] animate-third opacity-100`
           )}
-        ></div>
+        />
         <div
           className={cn(
             `absolute [background:radial-gradient(circle_at_center,_rgba(var(--fourth-color),_0.8)_0,_rgba(var(--fourth-color),_0)_50%)_no-repeat]`,
-            `[mix-blend-mode:var(--blending-value)] w-[var(--size)] h-[var(--size)] top-[calc(50%-var(--size)/2)] left-[calc(50%-var(--size)/2)]`,
-            `[transform-origin:calc(50%-200px)]`,
-            `animate-fourth`,
-            `opacity-70`
+            `[mix-blend-mode:var(--blending-value)] w-[var(--size)] h-[var(--size)]
+              top-[calc(50%-var(--size)/2)] left-[calc(50%-var(--size)/2)]
+              [transform-origin:calc(50%-200px)] animate-fourth opacity-70`
           )}
-        ></div>
+        />
         <div
           className={cn(
             `absolute [background:radial-gradient(circle_at_center,_rgba(var(--fifth-color),_0.8)_0,_rgba(var(--fifth-color),_0)_50%)_no-repeat]`,
-            `[mix-blend-mode:var(--blending-value)] w-[var(--size)] h-[var(--size)] top-[calc(50%-var(--size)/2)] left-[calc(50%-var(--size)/2)]`,
-            `[transform-origin:calc(50%-800px)_calc(50%+800px)]`,
-            `animate-fifth`,
-            `opacity-100`
+            `[mix-blend-mode:var(--blending-value)] w-[var(--size)] h-[var(--size)]
+              top-[calc(50%-var(--size)/2)] left-[calc(50%-var(--size)/2)]
+              [transform-origin:calc(50%-800px)_calc(50%+800px)] animate-fifth opacity-100`
           )}
-        ></div>
+        />
 
         {interactive && (
           <div
@@ -171,12 +156,11 @@ export default function BackgroundGradientAnimation({
             onMouseMove={handleMouseMove}
             className={cn(
               `absolute [background:radial-gradient(circle_at_center,_rgba(var(--pointer-color),_0.8)_0,_rgba(var(--pointer-color),_0)_50%)_no-repeat]`,
-              `[mix-blend-mode:var(--blending-value)] w-full h-full -top-1/2 -left-1/2`,
-              `opacity-70`
+              `[mix-blend-mode:var(--blending-value)] w-full h-full -top-1/2 -left-1/2 opacity-70`
             )}
-          ></div>
+          />
         )}
       </div>
     </div>
   );
-};
+}

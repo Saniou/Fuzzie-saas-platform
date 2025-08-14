@@ -131,6 +131,15 @@ module.exports = {
   plugins: [require('tailwindcss-animate')],
   safelist: [
     '[filter:url(#blurMe)_blur(40px)]',
+    {
+      pattern: /\[background:.*\]/,
+    },
+    {
+      pattern: /\[mix-blend-mode:.*\]/,
+    },
+    {
+      pattern: /\[transform-origin:.*\]/,
+    }
   ],
 }
 
