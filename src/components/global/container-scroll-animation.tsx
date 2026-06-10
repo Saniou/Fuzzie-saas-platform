@@ -8,7 +8,7 @@ export const ContainerScroll = ({
   children,
 }: {
   titleComponent: string | React.ReactNode;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
