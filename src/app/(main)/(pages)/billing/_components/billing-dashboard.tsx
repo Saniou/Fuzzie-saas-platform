@@ -86,25 +86,23 @@ const BillingDashboard = () => {
   const [isUpgradeDialogOpen, setIsUpgradeDialogOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 p-6 space-y-8">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 p-4 md:p-6 space-y-8">
       {/* Header Section */}
       <div className="animate-slide-in-up">
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-3">
-            <Badge variant="secondary" className="px-3 py-1 font-open-sans">
-              <Crown className="w-4 h-4 mr-1" />
-              Professional Plan
-            </Badge>
-            <Button
-              className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 transition-all duration-300 animate-pulse-glow font-open-sans font-semibold"
-              onClick={() => setIsUpgradeDialogOpen(true)}
-            >
-              <Zap className="w-4 h-4 mr-2" />
-              Upgrade Plan
-            </Button>
-          </div>
+        <div className="mb-2 flex flex-wrap items-center gap-3">
+          <Badge variant="secondary" className="px-3 py-1 font-open-sans">
+            <Crown className="w-4 h-4 mr-1" />
+            Professional Plan
+          </Badge>
+          <Button
+            className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 transition-all duration-300 animate-pulse-glow font-open-sans font-semibold"
+            onClick={() => setIsUpgradeDialogOpen(true)}
+          >
+            <Zap className="w-4 h-4 mr-2" />
+            Upgrade Plan
+          </Button>
         </div>
-        <p className="text-muted-foreground font-open-sans text-lg">
+        <p className="text-muted-foreground font-open-sans text-base md:text-lg">
           Manage your subscriptions, track payments, and monitor usage analytics
         </p>
       </div>

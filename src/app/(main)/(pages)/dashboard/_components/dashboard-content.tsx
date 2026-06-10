@@ -119,12 +119,8 @@ export function DashboardContent() {
 
   return (
     <div className="space-y-6 animate-in fade-in-50 duration-500">
-      <div className="flex items-center justify-between animate-in slide-in-from-top-4 duration-700">
-        <div className="space-y-1">
-
-
-        </div>
-        <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center justify-end gap-2 animate-in slide-in-from-top-4 duration-700">
+        <div className="flex flex-wrap items-center gap-2">
           <Select defaultValue="today">
             <SelectTrigger className="w-32">
               <SelectValue />
