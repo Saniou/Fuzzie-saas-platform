@@ -102,9 +102,11 @@ const Connections = async ({ searchParams }: Props) => {
         Connections
       </h1>
       <div className="relative flex flex-col gap-4">
-        <section className="flex flex-col gap-4 p-6 text-muted-foreground">
-          Connect all your apps directly from here. You may need to connect
-          these apps regularly to refresh verification
+        <section className="flex flex-col gap-4 p-6">
+          <p className="text-muted-foreground">
+            Connect all your apps directly from here. You may need to connect
+            these apps regularly to refresh verification.
+          </p>
           {CONNECTIONS.map((connection) => (
             <ConnectionCard
               key={connection.title}

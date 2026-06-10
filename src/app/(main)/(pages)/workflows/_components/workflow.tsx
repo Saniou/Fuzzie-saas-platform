@@ -41,41 +41,43 @@ const Workflow = ({ description, id, name, publish }: Props) => {
   }
 
   return (
-    <Card className="flex w-full flex-row items-center justify-between">
+    <Card className="group flex w-full flex-row items-center justify-between border-2 bg-gradient-to-br from-card to-card/50 transition-all duration-300 hover:scale-[1.01] hover:shadow-lg">
       <CardHeader className="flex flex-col gap-4">
         <Link href={`/workflows/editor/${id}`}>
-          <div className="flex flex-row gap-2">
+          <div className="mb-3 flex w-fit flex-row gap-1 rounded-lg bg-muted/40 p-2 transition-colors duration-300 group-hover:bg-muted">
             <Image
               src="/googleDrive.png"
               alt="Google Drive"
-              height={30}
-              width={30}
+              height={28}
+              width={28}
               className="object-contain"
             />
             <Image
               src="/notion.png"
               alt="Notion"
-              height={30}
-              width={30}
+              height={28}
+              width={28}
               className="object-contain"
             />
             <Image
               src="/discord.png"
               alt="Discord"
-              height={30}
-              width={30}
+              height={28}
+              width={28}
               className="object-contain"
             />
           </div>
           <div>
-            <CardTitle className="text-lg">{name}</CardTitle>
+            <CardTitle className="text-lg transition-colors duration-300 group-hover:text-primary">
+              {name}
+            </CardTitle>
             <CardDescription>{description}</CardDescription>
           </div>
         </Link>
       </CardHeader>
 
-      <div className="flex flex-col items-center gap-2 p-4">
-        <Label htmlFor={`publish-${id}`} className="text-muted-foreground">
+      <div className="flex flex-col items-center gap-2 p-6">
+        <Label htmlFor={`publish-${id}`} className="text-xs text-muted-foreground">
           {isPublished ? 'On' : 'Off'}
         </Label>
         <Switch

@@ -34,12 +34,12 @@ const Layout = async (props: Props) => {
   }
 
   return (
-    <div className='flex overflow-hidden h-screen'>
+    <div className="flex h-screen overflow-hidden">
       <Sidebar />
-        <div className='w-full'>
-          <InfoBar />
-            {props.children}
-        </div>
+      <div className="flex w-full flex-col overflow-hidden">
+        <InfoBar />
+        <main className="flex-1 overflow-y-auto">{props.children}</main>
+      </div>
     </div>
   )
 }
