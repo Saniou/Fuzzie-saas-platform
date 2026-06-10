@@ -177,11 +177,8 @@ const EditorCanvas = (props: Props) => {
   return (
     <ResizablePanelGroup direction="horizontal">
       <ResizablePanel defaultSize={70}>
-        <div className="flex h-full items-center justify-center">
-          <div
-            style={{ width: '100%', height: '100%', paddingBottom: '70px' }}
-            className="relative"
-          >
+        <div className="h-full w-full">
+          <div className="relative h-full w-full">
             {isWorkFlowLoading ? (
               <div className="absolute flex h-full w-full items-center justify-center">
                 <svg
@@ -203,7 +200,6 @@ const EditorCanvas = (props: Props) => {
               </div>
             ) : (
               <ReactFlow
-                className="w-[300px]"
                 onDrop={onDrop}
                 onDragOver={onDragOver}
                 nodes={nodes}
@@ -236,7 +232,8 @@ const EditorCanvas = (props: Props) => {
       </ResizablePanel>
       <ResizableHandle />
       <ResizablePanel
-        defaultSize={40}
+        defaultSize={30}
+        minSize={20}
         className="relative sm:block"
       >
         {isWorkFlowLoading ? (

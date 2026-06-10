@@ -41,8 +41,8 @@ const FlowInstance = ({ children, edges, nodes }: Props) => {
   }, [editorId])
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex gap-3 p-4">
+    <div className="flex h-full flex-col">
+      <div className="flex gap-3 border-b p-4">
         <Button onClick={onFlowAutomation} disabled={isFlow.length < 1}>
           Save
         </Button>
@@ -50,7 +50,7 @@ const FlowInstance = ({ children, edges, nodes }: Props) => {
           Publish
         </Button>
       </div>
-      {children}
+      <div className="min-h-0 flex-1">{children}</div>
     </div>
   )
 }

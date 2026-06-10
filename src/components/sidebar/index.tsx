@@ -14,14 +14,14 @@ const MenuOptions = (props: Props) => {
   const pathName = usePathname()
 
   return (
-    <nav className="flex h-screen w-16 shrink-0 flex-col justify-between gap-6 border-r bg-card/40 px-3 py-6 backdrop-blur-xl transition-all duration-300 md:w-60">
+    <nav className="flex h-screen w-16 shrink-0 flex-col justify-between gap-6 border-r bg-card/40 px-2 py-6 backdrop-blur-xl transition-all duration-300 md:w-60 md:px-3">
       <div className="flex flex-col gap-6 overflow-hidden">
         {/* Логотип */}
         <Link
           href="/"
-          className="flex items-center gap-2 px-1 font-bold"
+          className="flex items-center justify-center gap-2 font-bold md:justify-start md:px-1"
         >
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
             <Zap className="h-5 w-5" />
           </span>
           <span className="hidden text-lg md:inline">fuzzie.</span>
@@ -30,7 +30,7 @@ const MenuOptions = (props: Props) => {
         <Separator />
 
         {/* Навігація з підписами */}
-        <ul className="flex flex-col gap-1">
+        <ul className="flex flex-col gap-1.5">
           {menuOptions.map((menuItem) => {
             const selected = pathName === menuItem.href
             return (
@@ -38,17 +38,17 @@ const MenuOptions = (props: Props) => {
                 <Link
                   href={menuItem.href}
                   className={clsx(
-                    'group flex items-center gap-3 rounded-lg px-2.5 py-2 text-sm font-medium transition-all duration-300',
+                    'group flex items-center justify-center gap-3 rounded-lg py-1 text-sm font-medium transition-all duration-300 md:justify-start md:px-2 md:py-1.5',
                     selected
-                      ? 'bg-primary/10 text-primary'
-                      : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground'
+                      ? 'md:bg-primary/10 md:text-primary'
+                      : 'text-muted-foreground hover:text-foreground md:hover:bg-muted/60'
                   )}
                 >
                   <span
                     className={clsx(
-                      'flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-all duration-300',
+                      'flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition-all duration-300',
                       selected
-                        ? 'bg-primary/15'
+                        ? 'bg-primary/15 text-primary'
                         : 'bg-muted/40 group-hover:bg-muted'
                     )}
                   >
@@ -65,7 +65,7 @@ const MenuOptions = (props: Props) => {
       {/* Нижній блок */}
       <div className="flex flex-col gap-4">
         <Separator />
-        <div className="flex items-center justify-between gap-2 px-1">
+        <div className="flex items-center justify-center gap-2 md:justify-between md:px-1">
           <span className="hidden text-xs text-muted-foreground md:inline">
             Theme
           </span>

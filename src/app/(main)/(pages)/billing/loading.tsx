@@ -1,5 +1,5 @@
-import PageSkeleton from '@/components/global/page-skeleton'
+import BrandedLoader from '@/components/global/branded-loader'
 
 export default function Loading() {
-  return <PageSkeleton title="Your Billing Overview" stats rows={2} />
+  return <BrandedLoader label="Loading billing" />
 }

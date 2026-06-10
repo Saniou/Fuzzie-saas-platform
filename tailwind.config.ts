@@ -90,6 +90,18 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        /* Брендований лоадер */
+        "loader-bar": {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(300%)" },
+        },
+        "logo-pulse": {
+          "0%, 100%": { transform: "scale(1)", opacity: "1" },
+          "50%": { transform: "scale(1.08)", opacity: ".85" },
+        },
+        "ring-spin": {
+          to: { transform: "rotate(360deg)" },
+        },
       },
 
       /* ---- АНІМАЦІЇ (один раз) ---- */
@@ -106,6 +118,11 @@ module.exports = {
         third: "moveInCircle 40s linear infinite",
         fourth: "moveHorizontal 40s ease infinite",
         fifth: "moveInCircle 20s ease infinite",
+
+        /* Брендований лоадер */
+        "loader-bar": "loader-bar 1.1s ease-in-out infinite",
+        "logo-pulse": "logo-pulse 1.6s ease-in-out infinite",
+        "ring-spin": "ring-spin 1s linear infinite",
       },
     },
   },
