@@ -31,6 +31,7 @@ model User {
   Slack                 Slack[]
   connections           Connections[]
   workflows             Workflows[]
+  workflowRuns          WorkflowRun[]
 }
 
 model LocalGoogleCredential {
@@ -121,4 +122,22 @@ model Workflows {
   description       String
   User              User     @relation(fields: [userId], references: [clerkId])
   userId            String
+  runs              WorkflowRun[]
+}
+
+model WorkflowRun {
+  id           String   @id @default(uuid())
+  workflowId   String
+  workflowName String
+  userId       String // clerkId
+  status       String // success | partial | error | skipped
+  actions      String[] // типи виконаних дій, напр. ['Discord','Slack']
+  message      String?
+  createdAt    DateTime @default(now())
+
+  User     User      @relation(fields: [userId], references: [clerkId])
+  Workflow Workflows @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([workflowId])
 }

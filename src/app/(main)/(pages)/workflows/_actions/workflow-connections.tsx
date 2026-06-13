@@ -2,6 +2,7 @@
 import { Option } from '@/components/ui/multiple-selector'
 import { db } from '@/lib/db'
 import { auth, currentUser } from '@clerk/nextjs/server'
+import { executeWorkflow, logWorkflowRun } from '@/lib/workflow-executor'
 
 export const getGoogleListener = async () => {
   const { userId } = await auth()
@@ -177,4 +178,46 @@ export const onGetNodesEdges = async (flowId: string) => {
     },
   })
   if (nodesEdges?.nodes && nodesEdges?.edges) return nodesEdges
+}
+
+/**
+ * Ручний запуск воркфлоу ("Run now"): виконує flowPath, пише лог прогону у
+ * WorkflowRun і списує кредит. Дає змогу протестувати автоматизацію й одразу
+ * побачити результат на сторінці Logs — без налаштування Google Drive watch.
+ */
+export const onRunWorkflow = async (
+  workflowId: string
+): Promise<{ ok: boolean; status?: string; message: string }> => {
+  const user = await currentUser()
+  if (!user) return { ok: false, message: 'Not authenticated' }
+
+  const dbUser = await db.user.findUnique({
+    where: { clerkId: user.id },
+    select: { credits: true },
+  })
+  const credits = dbUser?.credits ?? '0'
+  const hasCredits = credits === 'Unlimited' || parseInt(credits) > 0
+  if (!hasCredits) return { ok: false, message: 'You are out of credits' }
+
+  const flow = await db.workflows.findFirst({
+    where: { id: workflowId, userId: user.id },
+  })
+  if (!flow) return { ok: false, message: 'Workflow not found' }
+  if (!flow.flowPath)
+    return {
+      ok: false,
+      message: 'Nothing to run — open the editor and Save your flow first',
+    }
+
+  const result = await executeWorkflow(flow)
+  await logWorkflowRun(flow, result)
+
+  if (credits !== 'Unlimited') {
+    await db.user.update({
+      where: { clerkId: user.id },
+      data: { credits: `${parseInt(credits) - 1}` },
+    })
+  }
+
+  return { ok: result.status !== 'error', status: result.status, message: result.message }
 }

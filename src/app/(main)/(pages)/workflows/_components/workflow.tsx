@@ -11,8 +11,10 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
+import { Button } from '@/components/ui/button'
+import { Loader2, Play } from 'lucide-react'
 import { toast } from 'sonner'
-import { onFlowPublish } from '../_actions/workflow-connections'
+import { onFlowPublish, onRunWorkflow } from '../_actions/workflow-connections'
 
 type Props = {
   name: string
@@ -23,6 +25,7 @@ type Props = {
 
 const Workflow = ({ description, id, name, publish }: Props) => {
   const [isPending, startTransition] = useTransition()
+  const [isRunning, startRun] = useTransition()
   const [isPublished, setIsPublished] = useState(!!publish) // локальний стан
 
   const handleToggle = (checked: boolean) => {
@@ -36,6 +39,20 @@ const Workflow = ({ description, id, name, publish }: Props) => {
         console.error(e)
         toast.error('Failed to update publish state')
         setIsPublished(!checked) // повертаємо назад якщо помилка
+      }
+    })
+  }
+
+  const handleRun = () => {
+    startRun(async () => {
+      try {
+        const res = await onRunWorkflow(id)
+        if (!res.ok) toast.error(res.message)
+        else if (res.status === 'partial') toast.warning(res.message)
+        else toast.success(res.message)
+      } catch (e) {
+        console.error(e)
+        toast.error('Failed to run workflow')
       }
     })
   }
@@ -76,16 +93,35 @@ const Workflow = ({ description, id, name, publish }: Props) => {
         </Link>
       </CardHeader>
 
-      <div className="flex flex-col items-center gap-2 p-6">
-        <Label htmlFor={`publish-${id}`} className="text-xs text-muted-foreground">
-          {isPublished ? 'On' : 'Off'}
-        </Label>
-        <Switch
-          id={`publish-${id}`}
-          checked={isPublished}
-          disabled={isPending}
-          onCheckedChange={handleToggle}
-        />
+      <div className="flex items-center gap-4 p-6">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleRun}
+          disabled={isRunning}
+          className="gap-2"
+        >
+          {isRunning ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Play className="h-4 w-4" />
+          )}
+          Run
+        </Button>
+        <div className="flex flex-col items-center gap-2">
+          <Label
+            htmlFor={`publish-${id}`}
+            className="text-xs text-muted-foreground"
+          >
+            {isPublished ? 'On' : 'Off'}
+          </Label>
+          <Switch
+            id={`publish-${id}`}
+            checked={isPublished}
+            disabled={isPending}
+            onCheckedChange={handleToggle}
+          />
+        </div>
       </div>
     </Card>
   )
