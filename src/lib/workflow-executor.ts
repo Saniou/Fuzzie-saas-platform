@@ -42,12 +42,17 @@ export async function executeWorkflow(
         executed.push('Discord')
       } else if (step === 'Slack') {
         if (!flow.slackAccessToken) throw new Error('Slack is not connected')
+        if (!flow.slackChannels.length)
+          throw new Error('No Slack channel selected — pick one and Save Template')
+        if (!flow.slackTemplate)
+          throw new Error('Slack message is empty — type one and Save Template')
         const channels = flow.slackChannels.map((c) => ({ label: '', value: c }))
-        await postMessageToSlack(
+        const res = await postMessageToSlack(
           flow.slackAccessToken,
           channels,
-          flow.slackTemplate ?? ''
+          flow.slackTemplate
         )
+        if (res.message !== 'Success') throw new Error(`Slack: ${res.message}`)
         executed.push('Slack')
       } else if (step === 'Notion') {
         if (!flow.notionDbId || !flow.notionAccessToken)
