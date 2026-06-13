@@ -16,6 +16,7 @@ const isIgnoredRoute = createRouteMatcher([
   '/api/auth/callback/slack',
   '/api/flow',
   '/api/cron/wait',
+  '/api/trigger',
   // Вебхуки краще пропускати без перевірок
   '/api/clerk-webhook(.*)',
   '/api/drive-activity/notification(.*)',
