@@ -167,6 +167,21 @@ export const onCreateWorkflow = async (name: string, description: string) => {
   }
 }
 
+export const onDeleteWorkflow = async (
+  workflowId: string
+): Promise<{ ok: boolean; message: string }> => {
+  const user = await currentUser()
+  if (!user) return { ok: false, message: 'Not authenticated' }
+
+  // Видаляємо лише власний воркфлоу; повʼязані WorkflowRun підуть каскадом
+  const result = await db.workflows.deleteMany({
+    where: { id: workflowId, userId: user.id },
+  })
+
+  if (result.count === 0) return { ok: false, message: 'Workflow not found' }
+  return { ok: true, message: 'Workflow deleted' }
+}
+
 export const onGetNodesEdges = async (flowId: string) => {
   const nodesEdges = await db.workflows.findUnique({
     where: {

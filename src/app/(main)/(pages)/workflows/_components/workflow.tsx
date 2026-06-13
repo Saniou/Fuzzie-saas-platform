@@ -9,24 +9,62 @@ import {
 } from '@/components/ui/card'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Button } from '@/components/ui/button'
-import { Loader2, Play } from 'lucide-react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
+import { Loader2, Play, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { onFlowPublish, onRunWorkflow } from '../_actions/workflow-connections'
+import {
+  onDeleteWorkflow,
+  onFlowPublish,
+  onRunWorkflow,
+} from '../_actions/workflow-connections'
 
 type Props = {
   name: string
   description: string
   id: string
   publish: boolean | null
+  flowPath?: string | null
 }
 
-const Workflow = ({ description, id, name, publish }: Props) => {
+// Іконки інтеграцій за типом кроку
+const STEP_ICONS: Record<string, { src: string; alt: string }> = {
+  'Google Drive': { src: '/googleDrive.png', alt: 'Google Drive' },
+  Discord: { src: '/discord.png', alt: 'Discord' },
+  Slack: { src: '/slack.png', alt: 'Slack' },
+  Notion: { src: '/notion.png', alt: 'Notion' },
+}
+
+const Workflow = ({ description, id, name, publish, flowPath }: Props) => {
+  const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [isRunning, startRun] = useTransition()
+  const [isDeleting, startDelete] = useTransition()
   const [isPublished, setIsPublished] = useState(!!publish) // локальний стан
+
+  // Реальні іконки: тригер Google Drive + дії з flowPath (без дублів)
+  let steps: string[] = []
+  try {
+    steps = flowPath ? JSON.parse(flowPath) : []
+  } catch {
+    steps = []
+  }
+  const iconKeys = Array.from(
+    new Set(['Google Drive', ...steps.filter((s) => STEP_ICONS[s])])
+  )
 
   const handleToggle = (checked: boolean) => {
     setIsPublished(checked) // оновлюємо одразу для UI
@@ -57,38 +95,50 @@ const Workflow = ({ description, id, name, publish }: Props) => {
     })
   }
 
+  const handleDelete = () => {
+    startDelete(async () => {
+      try {
+        const res = await onDeleteWorkflow(id)
+        if (!res.ok) {
+          toast.error(res.message)
+          return
+        }
+        toast.success(res.message)
+        router.refresh() // оновлюємо список після видалення
+      } catch (e) {
+        console.error(e)
+        toast.error('Failed to delete workflow')
+      }
+    })
+  }
+
   return (
     <Card className="group flex w-full flex-row items-center justify-between border-2 bg-gradient-to-br from-card to-card/50 transition-all duration-300 hover:scale-[1.01] hover:shadow-lg">
       <CardHeader className="flex flex-col gap-4">
         <Link href={`/workflows/editor/${id}`}>
-          <div className="mb-3 flex w-fit flex-row gap-1 rounded-lg bg-muted/40 p-2 transition-colors duration-300 group-hover:bg-muted">
-            <Image
-              src="/googleDrive.png"
-              alt="Google Drive"
-              height={28}
-              width={28}
-              className="object-contain"
-            />
-            <Image
-              src="/notion.png"
-              alt="Notion"
-              height={28}
-              width={28}
-              className="object-contain"
-            />
-            <Image
-              src="/discord.png"
-              alt="Discord"
-              height={28}
-              width={28}
-              className="object-contain"
-            />
+          <div className="mb-3 flex w-fit flex-row items-center gap-1 rounded-lg bg-muted/40 p-2 transition-colors duration-300 group-hover:bg-muted">
+            {iconKeys.map((key, i) => (
+              <React.Fragment key={key}>
+                {i > 0 && (
+                  <span className="px-0.5 text-muted-foreground">→</span>
+                )}
+                <Image
+                  src={STEP_ICONS[key].src}
+                  alt={STEP_ICONS[key].alt}
+                  height={26}
+                  width={26}
+                  className="object-contain"
+                />
+              </React.Fragment>
+            ))}
           </div>
           <div>
             <CardTitle className="text-lg transition-colors duration-300 group-hover:text-primary">
               {name}
             </CardTitle>
-            <CardDescription>{description}</CardDescription>
+            <CardDescription className="line-clamp-1">
+              {description}
+            </CardDescription>
           </div>
         </Link>
       </CardHeader>
@@ -108,6 +158,43 @@ const Workflow = ({ description, id, name, publish }: Props) => {
           )}
           Run
         </Button>
+
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              disabled={isDeleting}
+              className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+              aria-label="Delete workflow"
+            >
+              {isDeleting ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Trash2 className="h-4 w-4" />
+              )}
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete this workflow?</AlertDialogTitle>
+              <AlertDialogDescription>
+                &quot;{name}&quot; and its run history will be permanently
+                removed. This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDelete}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
         <div className="flex flex-col items-center gap-2">
           <Label
             htmlFor={`publish-${id}`}
