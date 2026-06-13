@@ -175,15 +175,15 @@ export function DashboardContent({ data }: Props) {
                   <Progress value={creditsPct} className="h-2" />
                 </div>
                 <div className="grid grid-cols-3 gap-3 pt-2">
-                  <div className="rounded-lg border bg-muted/30 p-3 text-center">
+                  <div className="min-w-0 rounded-lg border bg-muted/30 p-3 text-center">
                     <p className="text-xl font-bold">{workflowsCount}</p>
                     <p className="text-xs text-muted-foreground">Workflows</p>
                   </div>
-                  <div className="rounded-lg border bg-muted/30 p-3 text-center">
+                  <div className="min-w-0 rounded-lg border bg-muted/30 p-3 text-center">
                     <p className="text-xl font-bold">{draftCount}</p>
                     <p className="text-xs text-muted-foreground">Drafts</p>
                   </div>
-                  <div className="rounded-lg border bg-muted/30 p-3 text-center">
+                  <div className="min-w-0 rounded-lg border bg-muted/30 p-3 text-center">
                     <p className="text-xl font-bold">{connectionsCount}</p>
                     <p className="text-xs text-muted-foreground">Connections</p>
                   </div>

@@ -3,9 +3,16 @@ import React from 'react'
 import ProfilePicture from './_components/profile-picture'
 import TriggerKey from './_components/trigger-key'
 import WorkflowsManager from './_components/workflows-manager'
+import ConnectionsManager from './_components/connections-manager'
+import { getIntegrationStatus } from './_actions/connections'
 import { db } from '@/lib/db'
 import { currentUser } from '@clerk/nextjs/server'
-import { User as UserIcon, KeyRound, Workflow as WorkflowIcon } from 'lucide-react'
+import {
+  User as UserIcon,
+  KeyRound,
+  Workflow as WorkflowIcon,
+  Plug,
+} from 'lucide-react'
 
 type Props = {}
 
@@ -41,12 +48,13 @@ const Settings = async (props: Props) => {
   const authUser = await currentUser()
   if (!authUser) return null
 
-  const [user, workflows] = await Promise.all([
+  const [user, workflows, integrationStatus] = await Promise.all([
     db.user.findUnique({ where: { clerkId: authUser.id } }),
     db.workflows.findMany({
       where: { userId: authUser.id },
       select: { id: true, name: true, publish: true },
     }),
+    getIntegrationStatus(),
   ])
 
   const updateUserInfo = async (name: string) => {
@@ -77,6 +85,15 @@ const Settings = async (props: Props) => {
             appUrl={appUrl}
             workflows={workflows}
           />
+        </SectionCard>
+
+        {/* Connections management */}
+        <SectionCard
+          icon={Plug}
+          title="Connections"
+          description="Disconnect the apps wired to your automations"
+        >
+          <ConnectionsManager status={integrationStatus} />
         </SectionCard>
 
         {/* Workflows management */}

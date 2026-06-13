@@ -64,7 +64,9 @@ export const getDashboardData = async (): Promise<DashboardData | null> => {
     credits: dbUser?.credits ?? '0',
     workflowsCount: workflows.length,
     publishedCount: workflows.filter((w) => w.publish).length,
-    connectionsCount: discord + slack + notion,
+    // Google Drive завжди підключений (через Clerk OAuth) — рахуємо як на сторінці Connections
+    connectionsCount:
+      1 + (discord > 0 ? 1 : 0) + (slack > 0 ? 1 : 0) + (notion > 0 ? 1 : 0),
     runsCount,
     successCount,
     workflows,

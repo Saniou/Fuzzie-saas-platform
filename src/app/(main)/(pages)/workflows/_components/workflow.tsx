@@ -78,8 +78,8 @@ const Workflow = ({ description, id, name, publish, flowPath }: Props) => {
   }
 
   return (
-    <Card className="group flex w-full flex-row items-center justify-between border-2 bg-gradient-to-br from-card to-card/50 transition-all duration-300 hover:scale-[1.01] hover:shadow-lg">
-      <CardHeader className="flex flex-col gap-4">
+    <Card className="group flex w-full flex-col gap-2 border-2 bg-gradient-to-br from-card to-card/50 transition-all duration-300 hover:shadow-lg sm:flex-row sm:items-center sm:justify-between sm:gap-0 sm:hover:scale-[1.01]">
+      <CardHeader className="flex min-w-0 flex-col gap-4">
         <Link href={`/workflows/editor/${id}`}>
           <div className="mb-3 flex w-fit flex-row items-center gap-1 rounded-lg bg-muted/40 p-2 transition-colors duration-300 group-hover:bg-muted">
             {iconKeys.map((key, i) => (
@@ -108,7 +108,7 @@ const Workflow = ({ description, id, name, publish, flowPath }: Props) => {
         </Link>
       </CardHeader>
 
-      <div className="flex items-center gap-4 p-6">
+      <div className="flex w-full items-center justify-between gap-4 px-6 pb-6 pt-0 sm:w-auto sm:justify-end sm:p-6">
         <Button
           variant="outline"
           size="sm"

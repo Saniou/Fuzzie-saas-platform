@@ -36,9 +36,11 @@ const Layout = async (props: Props) => {
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
-      <div className="flex w-full flex-col overflow-hidden">
+      <div className="flex w-full min-w-0 flex-col overflow-hidden">
         <InfoBar />
-        <main className="flex-1 overflow-y-auto">{props.children}</main>
+        <main className="flex-1 overflow-y-auto overflow-x-hidden">
+          {props.children}
+        </main>
       </div>
     </div>
   )

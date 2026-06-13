@@ -135,7 +135,7 @@ export default function TriggerKey({ apiKey: initialKey, appUrl, workflows }: Pr
                 <Button
                   variant="outline"
                   onClick={() => copy(triggerUrl, 'Trigger URL')}
-                  className="gap-2"
+                  className="w-full gap-2 sm:w-auto"
                 >
                   <Copy className="h-4 w-4" /> Copy
                 </Button>
@@ -150,8 +150,13 @@ export default function TriggerKey({ apiKey: initialKey, appUrl, workflows }: Pr
           )}
 
           {/* Actions */}
-          <div className="flex flex-wrap gap-2">
-            <Button variant="outline" onClick={generate} disabled={pending} className="gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <Button
+              variant="outline"
+              onClick={generate}
+              disabled={pending}
+              className="w-full gap-2 sm:w-auto"
+            >
               {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
               Regenerate
             </Button>
@@ -159,7 +164,7 @@ export default function TriggerKey({ apiKey: initialKey, appUrl, workflows }: Pr
               variant="ghost"
               onClick={revoke}
               disabled={pending}
-              className="gap-2 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+              className="w-full gap-2 text-muted-foreground hover:bg-destructive/10 hover:text-destructive sm:w-auto"
             >
               <Trash2 className="h-4 w-4" /> Revoke
             </Button>
