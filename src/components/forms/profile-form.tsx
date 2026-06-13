@@ -10,12 +10,15 @@ import {
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 type UserLike = { name?: string | null; email?: string | null }
 type Props = { user?: UserLike | null; onUpdate?: (name: string) => Promise<any> | any }
 
 const ProfileForm = ({ user, onUpdate }: Props) => {
   const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
 
   const form = useForm<z.infer<typeof EditUserProfileSchema>>({
     mode: 'onChange',
@@ -33,8 +36,16 @@ const ProfileForm = ({ user, onUpdate }: Props) => {
 
   const handleSubmit = async (values: z.infer<typeof EditUserProfileSchema>) => {
     setIsLoading(true)
-    await (onUpdate?.(values.name))
-    setIsLoading(false)
+    try {
+      await onUpdate?.(values.name)
+      toast.success('Profile saved')
+      router.refresh()
+    } catch (e) {
+      console.error(e)
+      toast.error('Failed to save profile')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const disabled = isLoading || !user

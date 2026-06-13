@@ -125,6 +125,25 @@ export const onCreateWorkflow = async (name: string, description: string) => {
   }
 }
 
+export const onRenameWorkflow = async (
+  workflowId: string,
+  name: string
+): Promise<{ ok: boolean; message: string }> => {
+  const user = await currentUser()
+  if (!user) return { ok: false, message: 'Not authenticated' }
+
+  const trimmed = name.trim()
+  if (!trimmed) return { ok: false, message: 'Name cannot be empty' }
+
+  const result = await db.workflows.updateMany({
+    where: { id: workflowId, userId: user.id },
+    data: { name: trimmed },
+  })
+
+  if (result.count === 0) return { ok: false, message: 'Workflow not found' }
+  return { ok: true, message: 'Workflow renamed' }
+}
+
 export const onDeleteWorkflow = async (
   workflowId: string
 ): Promise<{ ok: boolean; message: string }> => {

@@ -9,28 +9,12 @@ import {
 } from '@/components/ui/card'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Button } from '@/components/ui/button'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
-import { Loader2, Play, Trash2 } from 'lucide-react'
+import { Loader2, Play } from 'lucide-react'
 import { toast } from 'sonner'
-import {
-  onDeleteWorkflow,
-  onFlowPublish,
-  onRunWorkflow,
-} from '../_actions/workflow-connections'
+import { onFlowPublish, onRunWorkflow } from '../_actions/workflow-connections'
 
 type Props = {
   name: string
@@ -49,10 +33,8 @@ const STEP_ICONS: Record<string, { src: string; alt: string }> = {
 }
 
 const Workflow = ({ description, id, name, publish, flowPath }: Props) => {
-  const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [isRunning, startRun] = useTransition()
-  const [isDeleting, startDelete] = useTransition()
   const [isPublished, setIsPublished] = useState(!!publish) // локальний стан
 
   // Реальні іконки: тригер Google Drive + дії з flowPath (без дублів)
@@ -91,23 +73,6 @@ const Workflow = ({ description, id, name, publish, flowPath }: Props) => {
       } catch (e) {
         console.error(e)
         toast.error('Failed to run workflow')
-      }
-    })
-  }
-
-  const handleDelete = () => {
-    startDelete(async () => {
-      try {
-        const res = await onDeleteWorkflow(id)
-        if (!res.ok) {
-          toast.error(res.message)
-          return
-        }
-        toast.success(res.message)
-        router.refresh() // оновлюємо список після видалення
-      } catch (e) {
-        console.error(e)
-        toast.error('Failed to delete workflow')
       }
     })
   }
@@ -158,42 +123,6 @@ const Workflow = ({ description, id, name, publish, flowPath }: Props) => {
           )}
           Run
         </Button>
-
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              disabled={isDeleting}
-              className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
-              aria-label="Delete workflow"
-            >
-              {isDeleting ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Trash2 className="h-4 w-4" />
-              )}
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Delete this workflow?</AlertDialogTitle>
-              <AlertDialogDescription>
-                &quot;{name}&quot; and its run history will be permanently
-                removed. This action cannot be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={handleDelete}
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-              >
-                Delete
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
 
         <div className="flex flex-col items-center gap-2">
           <Label

@@ -2,9 +2,10 @@ import ProfileForm from '@/components/forms/profile-form'
 import React from 'react'
 import ProfilePicture from './_components/profile-picture'
 import TriggerKey from './_components/trigger-key'
+import WorkflowsManager from './_components/workflows-manager'
 import { db } from '@/lib/db'
 import { currentUser } from '@clerk/nextjs/server'
-import { User as UserIcon, KeyRound } from 'lucide-react'
+import { User as UserIcon, KeyRound, Workflow as WorkflowIcon } from 'lucide-react'
 
 type Props = {}
 
@@ -44,25 +45,9 @@ const Settings = async (props: Props) => {
     db.user.findUnique({ where: { clerkId: authUser.id } }),
     db.workflows.findMany({
       where: { userId: authUser.id },
-      select: { id: true, name: true },
+      select: { id: true, name: true, publish: true },
     }),
   ])
-
-  const removeProfileImage = async () => {
-    'use server'
-    return db.user.update({
-      where: { clerkId: authUser.id },
-      data: { profileImage: '' },
-    })
-  }
-
-  const uploadProfileImage = async (image: string) => {
-    'use server'
-    return db.user.update({
-      where: { clerkId: authUser.id },
-      data: { profileImage: image },
-    })
-  }
 
   const updateUserInfo = async (name: string) => {
     'use server'
@@ -94,6 +79,15 @@ const Settings = async (props: Props) => {
           />
         </SectionCard>
 
+        {/* Workflows management */}
+        <SectionCard
+          icon={WorkflowIcon}
+          title="Workflows"
+          description="Rename, take live/off, or delete your automations"
+        >
+          <WorkflowsManager workflows={workflows} />
+        </SectionCard>
+
         {/* Profile */}
         <SectionCard
           icon={UserIcon}
@@ -101,11 +95,7 @@ const Settings = async (props: Props) => {
           description="Add or update your information"
         >
           <div className="flex flex-col gap-8">
-            <ProfilePicture
-              onDelete={removeProfileImage}
-              userImage={user?.profileImage || ''}
-              onUpload={uploadProfileImage}
-            />
+            <ProfilePicture userImage={user?.profileImage || ''} />
             <ProfileForm
               user={user}
               onUpdate={updateUserInfo}
