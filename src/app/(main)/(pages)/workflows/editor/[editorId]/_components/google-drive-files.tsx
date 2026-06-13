@@ -15,13 +15,16 @@ const GoogleDriveFiles = (props: Props) => {
 
   const reqGoogle = async () => {
     setLoading(true)
-    const response = await axios.get('/api/drive-activity')
-    if (response) {
+    try {
+      const response = await axios.get('/api/drive-activity')
       toast.message(response.data)
-      setLoading(false)
       setIsListening(true)
+    } catch (e) {
+      console.error('Failed to start Google Drive listener:', e)
+      toast.error('Could not start the listener. Try again.')
+    } finally {
+      setLoading(false)
     }
-    setIsListening(false)
   }
 
   const onListener = async () => {

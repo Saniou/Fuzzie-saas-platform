@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+const appUrl = process.env.NEXT_PUBLIC_URL ?? 'http://localhost:3000'
+
 export async function GET(req: NextRequest) {
   // Extract the code parameter from the query string
   const code = req.nextUrl.searchParams.get('code')
@@ -42,7 +44,7 @@ export async function GET(req: NextRequest) {
 
       // Handle the successful OAuth flow and redirect the user
       return NextResponse.redirect(
-        `https://localhost:3000/connections?app_id=${appId}&authed_user_id=${userId}&authed_user_token=${userToken}&slack_access_token=${accessToken}&bot_user_id=${botUserId}&team_id=${teamId}&team_name=${teamName}`
+        `${appUrl}/connections?app_id=${appId}&authed_user_id=${userId}&authed_user_token=${userToken}&slack_access_token=${accessToken}&bot_user_id=${botUserId}&team_id=${teamId}&team_name=${teamName}`
       )
     }
   } catch (error) {

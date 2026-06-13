@@ -19,14 +19,18 @@ export type RunResult = {
  * НЕ списує кредити і НЕ пише лог (це робить викликач), щоб логіку можна було
  * перевикористати і у вебхуці Google Drive, і в ручному запуску "Run now".
  */
-export async function executeWorkflow(flow: Workflows): Promise<RunResult> {
-  const flowPath: string[] = JSON.parse(flow.flowPath ?? '[]')
+export async function executeWorkflow(
+  flow: Workflows,
+  stepsOverride?: string[]
+): Promise<RunResult> {
+  // stepsOverride використовується при відновленні після Wait (з cronPath)
+  const path: string[] = stepsOverride ?? JSON.parse(flow.flowPath ?? '[]')
   const executed: string[] = []
   const errors: string[] = []
   let current = 0
 
-  while (current < flowPath.length) {
-    const step = flowPath[current]
+  while (current < path.length) {
+    const step = path[current]
     try {
       if (step === 'Discord') {
         const discord = await db.discordWebhook.findFirst({
@@ -61,7 +65,7 @@ export async function executeWorkflow(flow: Workflows): Promise<RunResult> {
             'https://api.cron-job.org/jobs',
             {
               job: {
-                url: `${process.env.NGROK_URI}?flow_id=${flow.id}`,
+                url: `${process.env.NGROK_URI}/api/cron/wait?flow_id=${flow.id}`,
                 enabled: 'true',
                 schedule: {
                   timezone: 'Europe/Istanbul',
@@ -85,7 +89,7 @@ export async function executeWorkflow(flow: Workflows): Promise<RunResult> {
         // Зберігаємо решту кроків після Wait для відновлення cron-задачею
         await db.workflows.update({
           where: { id: flow.id },
-          data: { cronPath: JSON.stringify(flowPath.slice(current + 1)) },
+          data: { cronPath: JSON.stringify(path.slice(current + 1)) },
         })
         executed.push('Wait')
         break
